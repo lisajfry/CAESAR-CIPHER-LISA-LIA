@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enkripsi dan Dekripsi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #container {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Program Enkripsi dan Dekripsi</h1>
+        <textarea id="inputText" placeholder="Masukkan teks"></textarea>
+        <br>
+        <button onclick="enkripsi()">Enkripsi</button>
+        <button onclick="dekripsi()">Dekripsi</button>
+        <br>
+        <p>Hasil:</p>
+        <textarea id="outputText" readonly></textarea>
+    </div>
+
+    <script>
+        // jumlah langkah pergeseran pada Caesar cipher yaitu 7 
+        const SHIFT = 7; 
+
+        // mendeskripsikan fungsi enkripsi
+        function enkripsi() { 
+            //mengambil nilai teks yang dimasukkan oleh pengguna dan menyimpannya   dalam variabel inputText.
+            const inputText = document.getElementById("inputText").value;
+            //untuk menyimpan hasil enskripsi
+            let outputText = "";
+
+            //melakukan perulangan setiap karakter dari input teks
+            for (let i = 0; i < inputText.length; i++) {
+                let char = inputText.charAt(i);
+                //memeriksa apakah karakter char adalah huruf, dengan menggunakan ekspresi reguler /[a-z]/i. Jika huruf, maka akan melanjutkan ke langkah enkripsi
+                if (char.match(/[a-z]/i)) {
+                    //untuk melakukan pergeseran dalam Caesar cipher
+                    const code = inputText.charCodeAt(i);
+                    //memeriksa apakah karakter adalah huruf besar dalam kode ASCII (65-90). Jika iya, maka akan dilakukan enkripsi huruf besar
+                    if (code >= 65 && code <= 90) {
+                        //hitung hasil enkripsi huruf besar dengan rumus Caesar cipher, geser kode huruf besar sebanyak SHIFT langkah, hasilnya dibatasi agar tetap dalam rentang kode huruf besar (65-90)
+                        char = String.fromCharCode(((code - 65 + SHIFT) % 26) + 65);
+                        //memeriksa apakah karakter adalah huruf kecil dalam kode ASCII (97-122). Jika iya, maka dilakukan enkripsi huruf kecil
+                    } else if (code >= 97 && code <= 122) { // Huruf kecil
+                        //hitung hasil enkripsi untuk huruf kecil dengan rumus Caesar cipher dengan memperhatikan rentang kode huruf kecil (97-122)
+                        char = String.fromCharCode(((code - 97 + SHIFT) % 26) + 97);
+                    }
+                }
+                //hasil karakter yang telah dienkripsi
+                outputText += char;
+            }
+
+            document.getElementById("outputText").value = outputText;
+        }
+
+        function dekripsi() {
+            const inputText = document.getElementById("inputText").value;
+            let outputText = "";
+
+            for (let i = 0; i < inputText.length; i++) {
+                let char = inputText.charAt(i);
+                if (char.match(/[a-z]/i)) {
+                    const code = inputText.charCodeAt(i);
+                    if (code >= 65 && code <= 90) { // Huruf besar
+                        char = String.fromCharCode(((code - 65 - SHIFT + 26) % 26) + 65);
+                    } else if (code >= 97 && code <= 122) { // Huruf kecil
+                        char = String.fromCharCode(((code - 97 - SHIFT + 26) % 26) + 97);
+                    }
+                }
+                outputText += char;
+            }
+
+            document.getElementById("outputText").value = outputText;
+        }
+    </script>
+</body>
+</html>
